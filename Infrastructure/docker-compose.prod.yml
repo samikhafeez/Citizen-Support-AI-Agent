@@ -1,0 +1,116 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# docker-compose.prod.yml  —  Production (pulls pre-built images from Docker Hub)
+#
+# Run from the project root after uploading the repo to EC2:
+#
+#   docker compose -f Infrastructure/docker-compose.prod.yml pull
+#   docker compose -f Infrastructure/docker-compose.prod.yml up -d --remove-orphans
+#
+# Required .env in the project root:
+#   OPENAI_API_KEY=sk-proj-...
+#   DOCKER_USERNAME=yourdockerhubusername
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  embeddingservice:
+    image: ${DOCKER_USERNAME}/embeddingservice:latest
+    container_name: embeddingservice
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  langchainservice:
+    image: ${DOCKER_USERNAME}/langchainservice:latest
+    container_name: langchainservice
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4o-mini
+      EMBEDDING_URL: http://embeddingservice:8001/embed
+      BACKEND_BASE_URL: http://councilchatbot:8080
+    ports:
+      - "8010:8010"
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+    depends_on:
+      embeddingservice:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    # NOTE: No faiss_index volume here.
+    # The FAISS index is baked into the image at build time (COPY . .).
+    # Mounting a named volume would shadow the index with an empty directory
+    # and break the service on first deploy. Rebuild the image if the index changes.
+
+  councilchatbot:
+    image: ${DOCKER_USERNAME}/councilchatbot:latest
+    container_name: councilchatbot
+    # Port 8080 is NOT exposed externally — nginx handles all public traffic.
+    # Uncomment below only for temporary direct-access debugging:
+    # ports:
+    #   - "8080:8080"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Production
+      OpenAI__ApiKey: ${OPENAI_API_KEY}
+      EmbeddingService__BaseUrl: http://embeddingservice:8001
+      LangChain__BaseUrl: http://langchainservice:8010
+      Playwright__TargetUrl: https://onlineforms.bradford.gov.uk/ufs/collectiondates.eb
+      Playwright__Headless: "true"
+      Playwright__WaitAfterSubmitMs: "2000"
+    depends_on:
+      embeddingservice:
+        condition: service_healthy
+      langchainservice:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+    volumes:
+      - chatbot_logs:/app/Logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  # ── Nginx HTTPS reverse proxy ─────────────────────────────────────────────
+  # Port 8080 is mapped to nginx (not councilchatbot) so nginx can intercept
+  # HTTP traffic on :8080 and redirect it to https://YOUR_EC2_IP
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      councilchatbot:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+
+volumes:
+  chatbot_logs:
+
+networks:
+  chatbot-net:
+    driver: bridge

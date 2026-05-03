@@ -1,0 +1,9 @@
+# This directory holds the FAISS index built by ingest.py.
+# The index files (index.faiss, index.pkl) are excluded from version control
+# because they are ~8 MB binary artefacts that can be regenerated.
+#
+# To build the index locally:
+#   cd LangChainService
+#   EMBEDDING_URL=http://localhost:8001/embed python ingest.py
+#
+# See Data/README.md for the full regeneration workflow.

@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+requests
+beautifulsoup4
+faiss-cpu
+langchain
+langchain-community
+langchain-openai
+langchain-text-splitters
+openai
+tiktoken
+python-dotenv
+# playwright removed — browser binaries are not installed in the container image.
+# Playwright is only needed locally for the scraping scripts (scrape_bradford*.py),
+# which are excluded from the Docker image via .dockerignore.

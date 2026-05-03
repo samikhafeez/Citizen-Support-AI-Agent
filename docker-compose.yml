@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# docker-compose.yml  —  Simple deploy (no nginx, HTTP only)
+#
+# Use this for a quick EC2 deploy where port 8080 is open directly:
+#
+#   docker compose up --build -d
+#
+# For the full production stack WITH nginx TLS termination, use:
+#
+#   docker compose -f Infrastructure/docker-compose.yml up --build -d
+#
+# Docker Compose reads .env from the current directory automatically.
+# Create .env from .env.example before running.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── 1. Embedding service ───────────────────────────────────────────────────
+  # Loads sentence-transformers/all-MiniLM-L6-v2 on startup (~60 s cold start).
+  # All other services wait for this to be healthy before starting.
+  embeddingservice:
+    build:
+      context: EmbeddingService
+      dockerfile: Dockerfile
+    container_name: embeddingservice
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # ── 2. LangChain agent service ─────────────────────────────────────────────
+  # RAG over Bradford Council pages using FAISS + GPT-4o-mini.
+  # EMBEDDING_URL must use the container name, never localhost.
+  langchainservice:
+    build:
+      context: LangChainService
+      dockerfile: Dockerfile
+    container_name: langchainservice
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4o-mini
+      EMBEDDING_URL: http://embeddingservice:8001/embed
+      BACKEND_BASE_URL: http://councilchatbot:8080
+    ports:
+      - "8010:8010"
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+    depends_on:
+      embeddingservice:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ── 3. ASP.NET Core chatbot ────────────────────────────────────────────────
+  # Builds from project root. Serves the SPA on port 8080.
+  # Builds FAQ embeddings on first start (uses cached chunks.embeddings.json).
+  councilchatbot:
+    build:
+      context: .
+      dockerfile: Infrastructure/Dockerfile
+    container_name: councilchatbot
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Production
+      OpenAI__ApiKey: ${OPENAI_API_KEY}
+      EmbeddingService__BaseUrl: http://embeddingservice:8001
+      LangChain__BaseUrl: http://langchainservice:8010
+      Playwright__TargetUrl: https://onlineforms.bradford.gov.uk/ufs/collectiondates.eb
+      Playwright__Headless: "true"
+      Playwright__WaitAfterSubmitMs: "2000"
+    depends_on:
+      embeddingservice:
+        condition: service_healthy
+      langchainservice:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - chatbot-net
+    volumes:
+      - chatbot_logs:/app/Logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+volumes:
+  chatbot_logs:
+
+networks:
+  chatbot-net:
+    driver: bridge
