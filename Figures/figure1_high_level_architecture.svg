@@ -1,0 +1,70 @@
+<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, sans-serif">
+  <title>Figure 1 — High-Level System Architecture</title>
+  <desc>Five-layer architecture: Citizen, Web Chat Interface, Backend API / Chat Controller, AI Services and Workflows, and Response — connected by arrows showing the request/response flow.</desc>
+
+  <rect width="760" height="420" fill="#f8f9fa"/>
+
+  <text x="380" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a2e">Figure 1 — High-Level System Architecture</text>
+
+  <text x="14" y="90" font-size="9.5" fill="#6c757d" transform="rotate(-90,14,90)" text-anchor="middle">PRESENTATION</text>
+  <text x="14" y="200" font-size="9.5" fill="#6c757d" transform="rotate(-90,14,200)" text-anchor="middle">INTERFACE</text>
+  <text x="14" y="270" font-size="9.5" fill="#6c757d" transform="rotate(-90,14,270)" text-anchor="middle">ORCHESTRATION</text>
+  <text x="14" y="345" font-size="9.5" fill="#6c757d" transform="rotate(-90,14,345)" text-anchor="middle">SERVICES</text>
+
+  <rect x="305" y="48" width="150" height="52" rx="6" fill="#e8f4fd" stroke="#5a9fd4" stroke-width="1.5"/>
+  <text x="380" y="69" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">Citizen</text>
+  <text x="380" y="86" text-anchor="middle" font-size="9" fill="#4a7a9b">Web browser / mobile</text>
+
+  <line x1="380" y1="100" x2="380" y2="128" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="240" y="128" width="280" height="52" rx="6" fill="#e9f5e9" stroke="#4caf76" stroke-width="1.5"/>
+  <text x="380" y="149" text-anchor="middle" font-size="11" font-weight="600" fill="#1b4d2e">Web Chat Interface</text>
+  <text x="380" y="166" text-anchor="middle" font-size="9" fill="#3a7a50">Static HTML · CSS · JavaScript (app.js)</text>
+
+  <line x1="380" y1="180" x2="380" y2="208" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="175" y="208" width="410" height="52" rx="6" fill="#fef9e7" stroke="#e2a800" stroke-width="1.5"/>
+  <text x="380" y="229" text-anchor="middle" font-size="11" font-weight="600" fill="#5a3e00">Backend API / Chat Controller</text>
+  <text x="380" y="246" text-anchor="middle" font-size="9" fill="#7a5800">ASP.NET Core (.NET 10) · ChatOrchestrator · Rate limiter · Session memory</text>
+
+  <line x1="380" y1="260" x2="380" y2="288" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="52" y="288" width="148" height="52" rx="6" fill="#f3e8ff" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="126" y="309" text-anchor="middle" font-size="10" font-weight="600" fill="#4a1870">LangChain / AI Service</text>
+  <text x="126" y="325" text-anchor="middle" font-size="9" fill="#7a3aa0">RAG · LLM calls</text>
+
+  <rect x="216" y="288" width="148" height="52" rx="6" fill="#f3e8ff" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="290" y="309" text-anchor="middle" font-size="10" font-weight="600" fill="#4a1870">Embedding Service</text>
+  <text x="290" y="325" text-anchor="middle" font-size="9" fill="#7a3aa0">Python · vector store</text>
+
+  <rect x="380" y="288" width="148" height="52" rx="6" fill="#f3e8ff" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="454" y="309" text-anchor="middle" font-size="10" font-weight="600" fill="#4a1870">Specialist Workflows</text>
+  <text x="454" y="325" text-anchor="middle" font-size="9" fill="#7a3aa0">Bins · Housing · Schools</text>
+
+  <rect x="544" y="288" width="148" height="52" rx="6" fill="#f3e8ff" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="618" y="309" text-anchor="middle" font-size="10" font-weight="600" fill="#4a1870">External Data</text>
+  <text x="618" y="325" text-anchor="middle" font-size="9" fill="#7a3aa0">Bradford Council · OS APIs</text>
+
+  <line x1="295" y1="260" x2="200" y2="288" stroke="#999" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="345" y1="260" x2="310" y2="288" stroke="#999" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="415" y1="260" x2="430" y2="288" stroke="#999" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="465" y1="260" x2="570" y2="288" stroke="#999" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+  <path d="M700,314 Q730,314 730,234 Q730,155 590,155 L520,155" stroke="#e74c3c" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrRed)"/>
+  <text x="738" y="234" text-anchor="middle" font-size="8.5" fill="#e74c3c" transform="rotate(90,738,234)">Response</text>
+
+  <rect x="270" y="368" width="220" height="36" rx="6" fill="#fce4e4" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="380" y="384" text-anchor="middle" font-size="11" font-weight="600" fill="#7b1a1a">Structured JSON Response</text>
+  <text x="380" y="398" text-anchor="middle" font-size="9" fill="#a03030">reply · service · suggestions · nextStepsUrl</text>
+
+  <line x1="380" y1="340" x2="380" y2="368" stroke="#e74c3c" stroke-width="1.5" marker-end="url(#arrRed)"/>
+
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#999"/>
+    </marker>
+    <marker id="arrRed" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#e74c3c"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,74 @@
+<svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, sans-serif">
+  <title>Figure 4 — Content Processing Pipeline</title>
+  <desc>Six-stage pipeline transforming raw council service content into retrieval-ready embeddings stored in a vector cache.</desc>
+
+  <rect width="760" height="340" fill="#f8f9fa"/>
+  <text x="380" y="28" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a2e">Figure 4 — Content Processing Pipeline</text>
+
+  <defs>
+    <marker id="pa" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#555"/>
+    </marker>
+  </defs>
+
+  <rect x="40" y="70" width="140" height="80" rx="6" fill="#e8f4fd" stroke="#5a9fd4" stroke-width="1.5"/>
+  <text x="110" y="95" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1a4a6b">Raw Service Content</text>
+  <text x="110" y="113" text-anchor="middle" font-size="8.5" fill="#3a6a8b">Bradford Council pages</text>
+  <text x="110" y="126" text-anchor="middle" font-size="8.5" fill="#3a6a8b">Policy documents</text>
+  <text x="110" y="139" text-anchor="middle" font-size="8.5" fill="#3a6a8b">FAQ text</text>
+
+  <line x1="180" y1="110" x2="210" y2="110" stroke="#555" stroke-width="1.5" marker-end="url(#pa)"/>
+
+  <rect x="210" y="70" width="140" height="80" rx="6" fill="#e9f5e9" stroke="#4caf76" stroke-width="1.5"/>
+  <text x="280" y="95" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1b4d2e">Structuring</text>
+  <text x="280" y="113" text-anchor="middle" font-size="8.5" fill="#2a6a40">Service name tagging</text>
+  <text x="280" y="126" text-anchor="middle" font-size="8.5" fill="#2a6a40">Metadata assignment</text>
+  <text x="280" y="139" text-anchor="middle" font-size="8.5" fill="#2a6a40">Category labelling</text>
+
+  <line x1="350" y1="110" x2="380" y2="110" stroke="#555" stroke-width="1.5" marker-end="url(#pa)"/>
+
+  <rect x="380" y="70" width="140" height="80" rx="6" fill="#fef9e7" stroke="#e2a800" stroke-width="1.5"/>
+  <text x="450" y="95" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5a3e00">Chunking</text>
+  <text x="450" y="113" text-anchor="middle" font-size="8.5" fill="#7a5800">Fixed-size text windows</text>
+  <text x="450" y="126" text-anchor="middle" font-size="8.5" fill="#7a5800">Sentence-boundary aware</text>
+  <text x="450" y="139" text-anchor="middle" font-size="8.5" fill="#7a5800">Overlap preserved</text>
+
+  <line x1="520" y1="110" x2="550" y2="110" stroke="#555" stroke-width="1.5" marker-end="url(#pa)"/>
+
+  <rect x="550" y="70" width="160" height="80" rx="6" fill="#f3e8ff" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="630" y="95" text-anchor="middle" font-size="10.5" font-weight="700" fill="#4a1870">Embedding</text>
+  <text x="630" y="113" text-anchor="middle" font-size="8.5" fill="#6a3090">Python embedding service</text>
+  <text x="630" y="126" text-anchor="middle" font-size="8.5" fill="#6a3090">Dense vector generation</text>
+  <text x="630" y="139" text-anchor="middle" font-size="8.5" fill="#6a3090">Semantic representation</text>
+
+  <line x1="630" y1="150" x2="630" y2="188" stroke="#555" stroke-width="1.5" marker-end="url(#pa)"/>
+
+  <rect x="480" y="188" width="300" height="80" rx="6" fill="#fff0e6" stroke="#e07030" stroke-width="1.5"/>
+  <text x="630" y="213" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5a2800">Vector Cache / Store</text>
+  <text x="630" y="231" text-anchor="middle" font-size="8.5" fill="#7a4010">Chunk text + vector pairs</text>
+  <text x="630" y="244" text-anchor="middle" font-size="8.5" fill="#7a4010">Persisted for zero-latency retrieval</text>
+  <text x="630" y="257" text-anchor="middle" font-size="8.5" fill="#7a4010">Refreshed on content update</text>
+
+  <line x1="480" y1="228" x2="370" y2="228" stroke="#555" stroke-width="1.5" marker-end="url(#pa)"/>
+
+  <rect x="40" y="188" width="330" height="80" rx="6" fill="#fce4e4" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="205" y="213" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7b1a1a">Retrieval-Ready Content</text>
+  <text x="205" y="231" text-anchor="middle" font-size="8.5" fill="#a03030">Top-k cosine-similarity search at query time</text>
+  <text x="205" y="244" text-anchor="middle" font-size="8.5" fill="#a03030">Returned as grounding context to LLM</text>
+  <text x="205" y="257" text-anchor="middle" font-size="8.5" fill="#a03030">Cited in structured response payload</text>
+
+  <circle cx="62" cy="74" r="10" fill="#5a9fd4"/>
+  <text x="62" y="78" text-anchor="middle" font-size="9" font-weight="700" fill="white">1</text>
+  <circle cx="232" cy="74" r="10" fill="#4caf76"/>
+  <text x="232" y="78" text-anchor="middle" font-size="9" font-weight="700" fill="white">2</text>
+  <circle cx="402" cy="74" r="10" fill="#e2a800"/>
+  <text x="402" y="78" text-anchor="middle" font-size="9" font-weight="700" fill="white">3</text>
+  <circle cx="572" cy="74" r="10" fill="#9b59b6"/>
+  <text x="572" y="78" text-anchor="middle" font-size="9" font-weight="700" fill="white">4</text>
+  <circle cx="502" cy="192" r="10" fill="#e07030"/>
+  <text x="502" y="196" text-anchor="middle" font-size="9" font-weight="700" fill="white">5</text>
+  <circle cx="62" cy="192" r="10" fill="#e74c3c"/>
+  <text x="62" y="196" text-anchor="middle" font-size="9" font-weight="700" fill="white">6</text>
+
+  <text x="380" y="305" text-anchor="middle" font-size="8.5" fill="#888">Offline indexing process (run once / on content update) — runtime retrieval uses Stage 6 only</text>
+</svg>

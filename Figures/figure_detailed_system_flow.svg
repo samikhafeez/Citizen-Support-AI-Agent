@@ -1,0 +1,140 @@
+<svg viewBox="0 0 680 740" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, sans-serif">
+  <title>Detailed System Flow — Bradford Council Chatbot</title>
+  <desc>End-to-end flow from User Query through Web Chat Interface, Backend API, Intent Routing, Conversation Memory, Decision split into RAG Pipeline and Specialist Workflow, converging at Response Assembly and returning Chatbot Response.</desc>
+
+  <rect width="680" height="740" fill="#f8f9fa"/>
+
+  <defs>
+    <marker id="dn" markerWidth="7" markerHeight="7" refX="3.5" refY="5" orient="auto">
+      <polygon points="0 0, 7 0, 3.5 6" fill="#666"/>
+    </marker>
+    <marker id="dnB" markerWidth="7" markerHeight="7" refX="3.5" refY="5" orient="auto">
+      <polygon points="0 0, 7 0, 3.5 6" fill="#5a9fd4"/>
+    </marker>
+    <marker id="dnG" markerWidth="7" markerHeight="7" refX="3.5" refY="5" orient="auto">
+      <polygon points="0 0, 7 0, 3.5 6" fill="#9b59b6"/>
+    </marker>
+    <marker id="dnR" markerWidth="7" markerHeight="7" refX="3.5" refY="5" orient="auto">
+      <polygon points="0 0, 7 0, 3.5 6" fill="#e74c3c"/>
+    </marker>
+    <marker id="dnO" markerWidth="7" markerHeight="7" refX="3.5" refY="5" orient="auto">
+      <polygon points="0 0, 7 0, 3.5 6" fill="#e07030"/>
+    </marker>
+  </defs>
+
+  <!-- ROW 1: User Query -->
+  <rect x="215" y="18" width="250" height="44" rx="7" fill="#e8f4fd" stroke="#5a9fd4" stroke-width="1.8"/>
+  <text x="340" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#1a4a6b">User Query</text>
+  <text x="340" y="53" text-anchor="middle" font-size="9" fill="#3a6a8b">Natural language question from citizen</text>
+
+  <line x1="340" y1="62" x2="340" y2="82" stroke="#666" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- ROW 2: Web Chat Interface -->
+  <rect x="215" y="82" width="250" height="44" rx="7" fill="#e9f5e9" stroke="#4caf76" stroke-width="1.8"/>
+  <text x="340" y="101" text-anchor="middle" font-size="12" font-weight="700" fill="#1b4d2e">Web Chat Interface</text>
+  <text x="340" y="117" text-anchor="middle" font-size="9" fill="#2a6a40">HTML · CSS · JavaScript (app.js)</text>
+
+  <line x1="340" y1="126" x2="340" y2="146" stroke="#666" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- ROW 3: Backend API / Chat Controller -->
+  <rect x="175" y="146" width="330" height="44" rx="7" fill="#fef9e7" stroke="#e2a800" stroke-width="1.8"/>
+  <text x="340" y="165" text-anchor="middle" font-size="12" font-weight="700" fill="#5a3e00">Backend API / Chat Controller</text>
+  <text x="340" y="181" text-anchor="middle" font-size="9" fill="#7a5800">ASP.NET Core · Rate limiter · Session management</text>
+
+  <line x1="340" y1="190" x2="340" y2="210" stroke="#666" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- ROW 4: Intent Routing + Service Detection -->
+  <rect x="175" y="210" width="330" height="44" rx="7" fill="#fff0e6" stroke="#e07030" stroke-width="1.8"/>
+  <text x="340" y="229" text-anchor="middle" font-size="12" font-weight="700" fill="#5a2800">Intent Routing + Service Detection</text>
+  <text x="340" y="245" text-anchor="middle" font-size="9" fill="#7a4010">Keyword scoring · Safety &amp; scope guards · IsSmallTalk / IsCrisis</text>
+
+  <line x1="340" y1="254" x2="340" y2="274" stroke="#666" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- ROW 5: Conversation Memory Check -->
+  <rect x="215" y="274" width="250" height="44" rx="7" fill="#f3e8ff" stroke="#9b59b6" stroke-width="1.8"/>
+  <text x="340" y="293" text-anchor="middle" font-size="12" font-weight="700" fill="#4a1870">Conversation Memory Check</text>
+  <text x="340" y="309" text-anchor="middle" font-size="9" fill="#6a3090">lastService · pendingFlow · session turns</text>
+
+  <line x1="340" y1="318" x2="340" y2="338" stroke="#666" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- ROW 6: Decision diamond -->
+  <polygon points="340,338 455,368 340,398 225,368" fill="#fce4e4" stroke="#e74c3c" stroke-width="1.8"/>
+  <text x="340" y="363" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7b1a1a">Decision: General Query</text>
+  <text x="340" y="379" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7b1a1a">or Specialist Workflow?</text>
+
+  <text x="156" y="406" text-anchor="middle" font-size="8.5" fill="#5a9fd4" font-weight="600">General Query</text>
+  <text x="520" y="406" text-anchor="middle" font-size="8.5" fill="#e07030" font-weight="600">Specialist Workflow</text>
+
+  <line x1="225" y1="368" x2="140" y2="368" stroke="#5a9fd4" stroke-width="1.6"/>
+  <line x1="140" y1="368" x2="140" y2="422" stroke="#5a9fd4" stroke-width="1.6" marker-end="url(#dnB)"/>
+
+  <line x1="455" y1="368" x2="540" y2="368" stroke="#e07030" stroke-width="1.6"/>
+  <line x1="540" y1="368" x2="540" y2="422" stroke="#e07030" stroke-width="1.6" marker-end="url(#dnO)"/>
+
+  <!-- LEFT COLUMN: RAG Pipeline -->
+  <rect x="44" y="422" width="194" height="44" rx="7" fill="#e8f4fd" stroke="#5a9fd4" stroke-width="1.6"/>
+  <text x="141" y="441" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">RAG Pipeline</text>
+  <text x="141" y="457" text-anchor="middle" font-size="8.5" fill="#3a6a8b">LangChain · LLM orchestration</text>
+
+  <line x1="141" y1="466" x2="141" y2="486" stroke="#5a9fd4" stroke-width="1.5" marker-end="url(#dnB)"/>
+
+  <rect x="44" y="486" width="194" height="44" rx="7" fill="#e8f4fd" stroke="#5a9fd4" stroke-width="1.6"/>
+  <text x="141" y="505" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">Embeddings + Retrieval</text>
+  <text x="141" y="521" text-anchor="middle" font-size="8.5" fill="#3a6a8b">Top-k cosine similarity · Vector store</text>
+
+  <line x1="141" y1="530" x2="141" y2="550" stroke="#5a9fd4" stroke-width="1.5" marker-end="url(#dnB)"/>
+
+  <rect x="44" y="550" width="194" height="44" rx="7" fill="#e8f4fd" stroke="#5a9fd4" stroke-width="1.6"/>
+  <text x="141" y="569" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">LangChain + LLM</text>
+  <text x="141" y="585" text-anchor="middle" font-size="8.5" fill="#3a6a8b">Context-grounded generation</text>
+
+  <!-- RIGHT COLUMN: Specialist Workflow -->
+  <rect x="444" y="422" width="194" height="44" rx="7" fill="#fff0e6" stroke="#e07030" stroke-width="1.6"/>
+  <text x="541" y="441" text-anchor="middle" font-size="11" font-weight="700" fill="#5a2800">Specialist Workflow</text>
+  <text x="541" y="457" text-anchor="middle" font-size="8.5" fill="#7a4010">Bins · Housing · Schools · Nearby · Appt</text>
+
+  <line x1="541" y1="466" x2="541" y2="486" stroke="#e07030" stroke-width="1.5" marker-end="url(#dnO)"/>
+
+  <rect x="444" y="486" width="194" height="44" rx="7" fill="#fff0e6" stroke="#e07030" stroke-width="1.6"/>
+  <text x="541" y="505" text-anchor="middle" font-size="11" font-weight="700" fill="#5a2800">Panels / Tools / Logic</text>
+  <text x="541" y="521" text-anchor="middle" font-size="8.5" fill="#7a4010">Playwright · OS Places · Rule-based</text>
+
+  <line x1="541" y1="530" x2="541" y2="550" stroke="#e07030" stroke-width="1.5" marker-end="url(#dnO)"/>
+
+  <rect x="444" y="550" width="194" height="44" rx="7" fill="#fff0e6" stroke="#e07030" stroke-width="1.6"/>
+  <text x="541" y="569" text-anchor="middle" font-size="11" font-weight="700" fill="#5a2800">Structured Service Response</text>
+  <text x="541" y="585" text-anchor="middle" font-size="8.5" fill="#7a4010">Typed reply + next steps URL</text>
+
+  <!-- Converge lines -->
+  <line x1="141" y1="594" x2="141" y2="638" stroke="#5a9fd4" stroke-width="1.5"/>
+  <line x1="141" y1="638" x2="218" y2="638" stroke="#5a9fd4" stroke-width="1.5" marker-end="url(#dnB)"/>
+
+  <line x1="541" y1="594" x2="541" y2="638" stroke="#e07030" stroke-width="1.5"/>
+  <line x1="541" y1="638" x2="462" y2="638" stroke="#e07030" stroke-width="1.5" marker-end="url(#dnO)"/>
+
+  <!-- ROW 7: Response Assembly Layer -->
+  <rect x="175" y="614" width="330" height="48" rx="7" fill="#e9f5e9" stroke="#4caf76" stroke-width="1.8"/>
+  <text x="340" y="635" text-anchor="middle" font-size="12" font-weight="700" fill="#1b4d2e">Response Assembly Layer</text>
+  <text x="340" y="651" text-anchor="middle" font-size="9" fill="#2a6a40">reply · service · suggestions · nextStepsUrl · score</text>
+
+  <line x1="340" y1="662" x2="340" y2="682" stroke="#666" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- ROW 8: Chatbot Response to User -->
+  <rect x="215" y="682" width="250" height="44" rx="7" fill="#fce4e4" stroke="#e74c3c" stroke-width="1.8"/>
+  <text x="340" y="701" text-anchor="middle" font-size="12" font-weight="700" fill="#7b1a1a">Chatbot Response to User</text>
+  <text x="340" y="717" text-anchor="middle" font-size="9" fill="#a03030">Rendered in Web Chat Interface</text>
+
+  <!-- Step numbers -->
+  <circle cx="474" cy="22" r="11" fill="#5a9fd4"/>
+  <text x="474" y="26" text-anchor="middle" font-size="9" font-weight="700" fill="white">1</text>
+  <circle cx="474" cy="86" r="11" fill="#4caf76"/>
+  <text x="474" y="90" text-anchor="middle" font-size="9" font-weight="700" fill="white">2</text>
+  <circle cx="514" cy="150" r="11" fill="#e2a800"/>
+  <text x="514" y="154" text-anchor="middle" font-size="9" font-weight="700" fill="white">3</text>
+  <circle cx="514" cy="214" r="11" fill="#e07030"/>
+  <text x="514" y="218" text-anchor="middle" font-size="9" font-weight="700" fill="white">4</text>
+  <circle cx="474" cy="278" r="11" fill="#9b59b6"/>
+  <text x="474" y="282" text-anchor="middle" font-size="9" font-weight="700" fill="white">5</text>
+  <circle cx="474" cy="686" r="11" fill="#e74c3c"/>
+  <text x="474" y="690" text-anchor="middle" font-size="9" font-weight="700" fill="white">8</text>
+</svg>

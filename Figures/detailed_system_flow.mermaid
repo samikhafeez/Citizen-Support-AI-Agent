@@ -1,0 +1,39 @@
+flowchart TD
+    A([User Query]) --> B
+
+    B[Web Chat Interface\nHTML · CSS · JavaScript]
+    B --> C
+
+    C[Backend API / Chat Controller\nASP.NET Core · Rate limiter · Session management]
+    C --> D
+
+    D[Intent Routing + Service Detection\nKeyword scoring · Safety & scope guards · IsSmallTalk / IsCrisis]
+    D --> E
+
+    E[Conversation Memory Check\nlastService · pendingFlow · session turns]
+    E --> F
+
+    F{Decision: General Query\nor Specialist Workflow?}
+
+    F -- General Query --> G
+    F -- Specialist Workflow --> H
+
+    subgraph RAG ["RAG Pipeline"]
+        G[RAG Pipeline\nLangChain · LLM orchestration]
+        G --> G2[Embeddings + Retrieval\nTop-k cosine similarity · Vector store]
+        G2 --> G3[LangChain + LLM\nContext-grounded generation]
+    end
+
+    subgraph SW ["Specialist Workflow"]
+        H[Specialist Workflow\nBins · Housing · Schools · Nearby · Appt]
+        H --> H2[Panels / Tools / Logic\nPlaywright · OS Places · Rule-based]
+        H2 --> H3[Structured Service Response\nTyped reply + next steps URL]
+    end
+
+    G3 --> R
+    H3 --> R
+
+    R[Response Assembly Layer\nreply · service · suggestions · nextStepsUrl · score]
+    R --> Z
+
+    Z([Chatbot Response to User\nRendered in Web Chat Interface])
