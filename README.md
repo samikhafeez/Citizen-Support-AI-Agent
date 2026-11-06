@@ -1,7 +1,8 @@
-# Bradford Council — Citizen Support AI Agent
+# Citizen Support AI Agent
 
-> **Final Year University Project · Portfolio Repository**  
-> A production-grade AI chatbot prototype built for Bradford Metropolitan District Council.
+> **Final-year client project for Bradford Council** (University of Bradford, 2025–26, team of three): a citizen-support AI agent prototype.
+>
+> **Status:** final-year client-project prototype, demonstrated to Bradford Council in April 2026. Not a live Council service.
 
 ![.NET](https://img.shields.io/badge/.NET-10.0-purple?logo=dotnet)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
@@ -10,13 +11,14 @@
 ![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?logo=amazonaws)
 ![License](https://img.shields.io/badge/License-Academic%20Portfolio-lightgrey)
 
-A **production-grade AI chatbot** that helps Bradford Council citizens get instant answers about council services. Built on **ASP.NET Core 10**, **LangChain**, **FAISS vector search**, and **GPT-4o-mini**, deployed as three Docker containers behind an Nginx TLS reverse proxy on AWS EC2.
+A prototype chatbot that answers questions about Bradford Council services from the Council's public web pages and guides users through tasks such as finding their bin collection day. It is built with **ASP.NET Core 10**, **LangChain**, **FAISS vector search** and **GPT-4o-mini**. For the project demonstration it ran on AWS EC2 as three Docker containers behind an Nginx reverse proxy.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Team and my role](#team-and-my-role)
 - [Architecture](#architecture)
 - [Architecture Diagrams](#architecture-diagrams)
 - [Tech Stack](#tech-stack)
@@ -25,8 +27,7 @@ A **production-grade AI chatbot** that helps Bradford Council citizens get insta
 - [Prerequisites](#prerequisites)
 - [Local Development](#local-development)
 - [Docker Deployment — Local](#docker-deployment--local)
-- [Docker Deployment — AWS EC2 Production](#docker-deployment--aws-ec2-production)
-- [CI/CD with GitHub Actions](#cicd-with-github-actions)
+- [Docker Deployment on AWS EC2 (Demonstration)](#docker-deployment-on-aws-ec2-demonstration)
 - [Environment Variables](#environment-variables)
 - [API Endpoints](#api-endpoints)
 - [Running Tests](#running-tests)
@@ -54,6 +55,27 @@ Council Tax · Waste & Bins · Benefits & Support · School Admissions · Planni
 - Feedback collection with satisfaction dashboard
 - Voice input and text-to-speech output
 - Themeable UI (Dark, Light, Midnight, Warm) with font and layout controls
+
+---
+
+## Team and my role
+
+A final-year client project at the University of Bradford (October 2025 – April 2026), built by a team of three students with Bradford Council as the client. This repository is my portfolio copy of the project code, uploaded in May 2026 after the project ended, so its commit history does not show who wrote each part.
+
+**My role:** Technical Lead; Scrum Master for Sprints 2 and 4 (the role rotated between team members).
+
+**My contribution**
+- Drafted a proposed file structure for the code base, and created the class diagram and the final design map.
+- Built the first MVP of the agent and refined it with the LLM API.
+- Added the school lookup by postcode, appointment booking and council-tax payment calculation, and added links to relevant websites in the workflows for general information questions.
+- With a teammate, refined the bin-collection use case so it could scrape data from the Council's bin-collection website; I also made its responses handle more ways of asking.
+- Refactored and reviewed the code.
+- Created the project plan, quality-control plan and ROAM risk analysis, and reviewed the project budget and costing.
+
+**Team contribution**
+- One teammate wrote the research statement and methodology, drafted a proposed knowledge-base structure, compiled links to Council websites for the knowledge base, created the sequence diagram, and finalised the product backlog and sprint plan.
+- Another created the team's GitHub repository and the initial agent for basic interaction through an LLM API, integrated LangChain, added automated testing of sample queries for each use case, created the use-case diagram and the demo plan, and finalised the documentation on methods, testing and evaluation.
+- Shared work: the team contract and roles, initial research, project charter, sprint goals, exhibition planning and the closure report.
 
 ---
 
@@ -126,7 +148,6 @@ The `Figures/` folder contains SVG architecture diagrams produced for the projec
 | Agent framework | LangChain + LangChain-OpenAI |
 | Browser automation | Microsoft Playwright (bin collection lookup) |
 | Containerisation | Docker + Docker Compose |
-| CI/CD | GitHub Actions |
 | Cloud | AWS EC2 (Ubuntu) |
 | Registry | Docker Hub |
 
@@ -232,15 +253,11 @@ Citizen-Support-AI-Agent-GitHub/
 ├── Infrastructure/
 │   ├── Dockerfile                    # Multi-stage .NET build
 │   ├── docker-compose.yml            # Local development (builds from source)
-│   └── docker-compose.prod.yml       # Production (pulls from Docker Hub)
+│   └── docker-compose.prod.yml       # EC2 set-up (pulls images from Docker Hub)
 │
-├── Tests/
-│   ├── BradfordChatbot.Tests/        # xUnit C# test suite (12 categories)
-│   └── eval/                         # Python pytest eval suite (live server)
-│
-└── .github/
-    └── workflows/
-        └── deploy.yml                # CI/CD: build → push → deploy to EC2
+└── Tests/
+    ├── BradfordChatbot.Tests/        # xUnit C# test suite (12 categories)
+    └── eval/                         # Python pytest eval suite (live server)
 ```
 
 ---
@@ -262,8 +279,8 @@ Citizen-Support-AI-Agent-GitHub/
 ### 1. Clone and set up environment
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/citizen-support-ai-agent.git
-cd citizen-support-ai-agent
+git clone https://github.com/samikhafeez/Citizen-Support-AI-Agent.git
+cd Citizen-Support-AI-Agent
 
 cp .env.example .env
 # Edit .env and add your OpenAI API key
@@ -344,7 +361,9 @@ curl http://localhost:8080/health   # {"status":"ok"}
 
 ---
 
-## Docker Deployment — AWS EC2 Production
+## Docker Deployment on AWS EC2 (Demonstration)
+
+This section documents an EC2 set-up for demonstration purposes. It is not a hardened production deployment (see [Known Limitations](#known-limitations)).
 
 ### Step 1 — Build and push images to Docker Hub
 
@@ -377,7 +396,7 @@ sudo usermod -aG docker ubuntu && newgrp docker
 mkdir -p ~/councilchatbot/Infrastructure
 ```
 
-### Step 3 — Copy the production compose file
+### Step 3 — Copy the EC2 compose file
 
 From your local machine:
 ```bash
@@ -429,29 +448,6 @@ cd ~/councilchatbot
 docker compose -f Infrastructure/docker-compose.prod.yml pull
 docker compose -f Infrastructure/docker-compose.prod.yml up -d --remove-orphans
 ```
-
----
-
-## CI/CD with GitHub Actions
-
-The workflow at `.github/workflows/deploy.yml` runs automatically on every push to `main`:
-
-1. Builds all three Docker images
-2. Pushes them to Docker Hub
-3. SSHes into EC2 and runs `docker compose pull && up -d`
-
-### Required GitHub Secrets
-
-Go to **Settings → Secrets and variables → Actions** and add:
-
-| Secret | Description |
-|---|---|
-| `DOCKER_USERNAME` | Your Docker Hub username |
-| `DOCKER_PASSWORD` | Your Docker Hub password or access token |
-| `OPENAI_API_KEY` | Your OpenAI API key |
-| `EC2_HOST` | Public IP or DNS of your EC2 instance |
-| `EC2_USER` | SSH username (typically `ubuntu`) |
-| `EC2_SSH_KEY` | Full contents of your `.pem` private key file |
 
 ---
 
@@ -674,7 +670,7 @@ The `wwwroot/assets/bradford-logo.png` asset and `Figures/` SVG diagrams can be 
 - Integrate with Bradford Council's official APIs when available
 - Add persistent conversation history (currently session-only, 30-minute TTL)
 - Implement a human handoff flow for complex housing or benefits queries
-- Extend the eval suite with automated regression tests on every CI run
+- Add a CI workflow that runs the test suites as automated regression tests
 
 ---
 
